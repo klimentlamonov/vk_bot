@@ -31,22 +31,45 @@ def create_new_list(user_id):
             if event.to_me:
                 lst_name = event.text
                 user_id = event.user_id
-                if not file_logic.create_new_list(user_id, lst_name):
+                
+                # return file_logic.create_new_list(user_id, lst_name) if not 
+                # сделать так, чтобы каждый лист назывался УНИКАЛЬНО!
+
+
+def show_lists(user_id):
+    lsts = dict()
+    try:
+        for lst in file_logic.show_my_lists(user_id):
+            lsts[lst] = file_logic.read_list(user_id, lst)
+    except Exception:
+        return None
+
+
+def delete_list(user_id):
+    for event in longpoll.listen():
+        if event.type == VkEventType.MESSAGE_NEW:
+            if event.to_me:
+                lst_name = event.text
+                user_id = event.user_id
+
+                file_logic.delete_list(user_id, lst_name)
+                if lst_name in show_lists(user_id):
                     return False
                 return True
 
 
-def show_lists(user_id):
-    return file_logic.show_my_lists(user_id)
+def add_to_list(user_id):
+    for event in longpoll.listen():
+        if event.type == VkEventType.MESSAGE_NEW:
+            if event.to_me:
+                lst_and_fields = event.text.split(", ")
+                user_id = event.user_id
 
-
-# def put_in_list(user_id):
-#     show_lists(user_id)
-#     for event in longpoll.listen():
-#         if event.type == VkEventType.MESSAGE_NEW:
-#             if event.to_me:
-#                 lst_name = event.text
-#                 user_id = event.user_id
-#                 lists[lst_name] = []
-#                 send_message(user_id, f'Товой список {lst_name} создан!')
-#                 return True
+                if len(lst_and_fields) < 1:
+                    return False 
+                try:
+                    current_list = file_logic.read_list(user_id, lst_and_fields[0]) + lst_and_fields[1:]
+                    file_logic.write_in_list(user_id, lst_and_fields[0], current_list)
+                    return True
+                except Exception:
+                    return False
