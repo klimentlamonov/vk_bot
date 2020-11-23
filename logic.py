@@ -41,8 +41,13 @@ def show_lists(user_id):
     try:
         for lst in file_logic.show_my_lists(user_id):
             lsts[lst] = file_logic.read_list(user_id, lst)
+        return lsts
     except Exception:
         return None
+
+
+def show_all_lists(user_id):
+    pass
 
 
 def delete_list(user_id):

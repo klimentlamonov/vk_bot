@@ -8,6 +8,7 @@ DELETE = 'удалить'
 UPDATE = 'обновить'
 HELP = 'помоги'
 SHOW = 'покажи'
+SHOW_ALL = 'покажи все'
 COMANDS = (
     CREATE,
     ADD,
