@@ -4,25 +4,15 @@ from vk_api.longpoll import VkLongPoll, VkEventType
 from secret import main_token
 import file_logic
 
-
-""" Globals.
-
-Starting session and create key words.
-"""
-
 lists = dict()
-vk_session = vk_api.VkApi(token = main_token)
+vk_session = vk_api.VkApi(token=main_token)
 vk = vk_session.get_api()
 longpoll = VkLongPoll(vk_session)
 
 
-""" Functions.
-
-For working with VK.
-"""
 
 def send_message(id, text):
-    vk.messages.send(user_id = id, message = text, random_id = 0)
+    vk.messages.send(user_id=id, message=text, random_id=0)
 
 
 def create_new_list(user_id):
@@ -31,7 +21,7 @@ def create_new_list(user_id):
             if event.to_me:
                 lst_name = event.text
                 user_id = event.user_id
-                
+
                 # return file_logic.create_new_list(user_id, lst_name) if not 
                 # сделать так, чтобы каждый лист назывался УНИКАЛЬНО!
 
@@ -71,7 +61,7 @@ def add_to_list(user_id):
                 user_id = event.user_id
 
                 if len(lst_and_fields) < 1:
-                    return False 
+                    return False
                 try:
                     current_list = file_logic.read_list(user_id, lst_and_fields[0]) + lst_and_fields[1:]
                     file_logic.write_in_list(user_id, lst_and_fields[0], current_list)
